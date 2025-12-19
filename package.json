@@ -1,10 +1,13 @@
 {
-  "name": "name...",
+  "name": "@devram-systems/iam",
   "version": "0.0.1",
-  "description": "...",
-  "author": "Ramos-devram",
+  "description": "Identity and Access Management",
+  "author": "Ramos (devram)",
+  "license": "MIT",
   "private": true,
-  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=22"
+  },
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
