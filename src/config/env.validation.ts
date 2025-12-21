@@ -12,8 +12,8 @@ class EnvironmentVariables {
   ENVIRONMENT!: Environment
 
   @IsNumber()
-  @IsNotEmpty()
   @Min(1)
+  @IsNotEmpty()
   PORT!: number
 }
 
