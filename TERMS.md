@@ -16,3 +16,8 @@ Terms of Use / Distribution
     - Public projects or educational uses: give credit to Devram Systems and/or the original author
       (e.g., in README, documentation, or project metadata).
     - Private/internal projects: acknowledgment is encouraged but not mandatory.
+
+5. Scope
+   These Terms of Use apply exclusively to the original Devram Systems software project.
+   They do not extend or impose obligations on derivatives, forks, or third-party projects,
+   except as required by the MIT License for public or educational use.
