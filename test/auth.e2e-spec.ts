@@ -19,13 +19,13 @@ describe('POST /auth/validate', () => {
     server = app.getHttpServer() as Server
   })
 
-  afterAll(async () => {
-    await app.close()
-  })
-
   it('should return a provisional satisfactory response', () => {
     const URL = '/auth/validate'
 
     return request(server).post(URL).expect(200).expect({ message: 'Success' })
+  })
+
+  afterAll(async () => {
+    await app.close()
   })
 })
