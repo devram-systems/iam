@@ -19,7 +19,7 @@ describe('POST /auth/validate', () => {
     server = app.getHttpServer() as Server
   })
 
-  it('should return a provisional satisfactory response', () => {
+  it('should respond successfully when a valid request is sent', () => {
     const URL = '/auth/validate'
 
     return request(server).post(URL).expect(200).expect({ message: 'Success' })
