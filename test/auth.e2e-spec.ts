@@ -19,10 +19,10 @@ describe('POST /auth/validate', () => {
     server = app.getHttpServer() as Server
   })
 
-  it('should respond successfully when a valid request is sent', () => {
+  it('should respond with a success message when a valid request is sent', async () => {
     const URL = '/auth/validate'
 
-    return request(server).post(URL).expect(200).expect({ message: 'Success' })
+    await request(server).post(URL).expect(200).expect({ message: 'Success' })
   })
 
   afterAll(async () => {
