@@ -1,3 +1,21 @@
-MIT License
+MIT License (Modified for Public/Private Distinction)
 
 Copyright (c) 2025 Devram Systems
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, subject to the following conditions:
+
+1. Public or Educational Use
+   If the Software is used in any public project, repository, or educational context,
+   the original copyright notice and this permission notice must be included in all copies
+   or substantial portions of the Software. Additionally, a reasonable acknowledgment of
+   Devram Systems and/or the original author (e.g., in documentation, README, or project metadata)
+   should be included.
+
+2. Private or Internal Use
+   If the Software is used in a private, internal, or non-public project,
+   no explicit copyright notice is required, but some form of indirect recognition
+   of Devram Systems’ contribution is encouraged (e.g., internal documentation, acknowledgements).
