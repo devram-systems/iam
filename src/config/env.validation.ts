@@ -22,7 +22,9 @@ export function validateEnv(config: Record<string, unknown>): EnvironmentVariabl
     enableImplicitConversion: true,
   })
 
-  const errors = validateSync(validatedConfig, { skipMissingProperties: false })
+  const errors = validateSync(validatedConfig, {
+    skipMissingProperties: false,
+  })
 
   if (errors.length > 0) throw new Error(errors.toString())
 

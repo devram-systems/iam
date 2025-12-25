@@ -12,9 +12,16 @@ describe('AuthController', () => {
     controller = module.get<AuthController>(AuthController)
   })
 
-  // TODO: provisional test
-  it('should return a success message', () => {
-    const result = controller.validate()
-    expect(result).toEqual({ message: 'Success' })
+  it('should return a success message when the validation is called correctly', () => {
+    const dto = {
+      identity: 'user.example',
+      password: 'pass-example',
+    }
+
+    const result = controller.validate(dto)
+
+    expect(result).toEqual({
+      message: 'Identity verified successfully',
+    })
   })
 })

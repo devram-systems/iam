@@ -1,13 +1,17 @@
 import { NestFactory } from '@nestjs/core'
-import { AppModule } from './app.module'
-
 import { ConfigService } from '@nestjs/config'
+
+import { AppModule } from './app.module'
+import { createGlobalValidationPipe } from './common/pipes/global-validation.pipe'
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create(AppModule)
-  const configServer = app.get(ConfigService)
 
-  const port = configServer.getOrThrow<number>('PORT')
+  app.useGlobalPipes(createGlobalValidationPipe())
+
+  const configService = app.get(ConfigService)
+  const port = configService.getOrThrow<number>('PORT')
+
   await app.listen(port)
 }
 
