@@ -39,7 +39,7 @@ describe('POST /auth/validate', () => {
     })
   })
 
-  it('should respond with a invalid requests when the request body is empty', async () => {
+  it('should respond with a required fields error when the request body is empty', async () => {
     const response = await request(server).post(URL).expect(400)
 
     expect(response.body).toMatchObject({
@@ -70,7 +70,7 @@ describe('POST /auth/validate', () => {
       description: 'other field is sent',
     },
   ])(
-    'should respond with an invalid request when $description',
+    'should respond with an required fields when $description',
     async ({ body, requiredFields }) => {
       const response = await request(server).post(URL).send(body).expect(400)
 
@@ -100,14 +100,38 @@ describe('POST /auth/validate', () => {
       invalidFields: ['identity', 'password'],
       description: 'required fields are of wrong type',
     },
-  ])('should response a invalid request when $description', async ({ body, invalidFields }) => {
-    const response = await request(server).post(URL).send(body).expect(400)
+  ])(
+    'should response an invalid fields error when $description',
+    async ({ body, invalidFields }) => {
+      const response = await request(server).post(URL).send(body).expect(400)
+
+      expect(response.body).toMatchObject({
+        message: 'Invalid request body',
+        error: {
+          code: ErrorCode.INVALID_REQUEST,
+          details: { invalidFields },
+        },
+      })
+    },
+  )
+
+  it('should respond with forbidden fields error when extra fields are sent', async () => {
+    const response = await request(server)
+      .post(URL)
+      .send({
+        identity: 'user.example',
+        password: 'pass-example',
+        otherField: 'value',
+      })
+      .expect(400)
 
     expect(response.body).toMatchObject({
       message: 'Invalid request body',
       error: {
         code: ErrorCode.INVALID_REQUEST,
-        details: { invalidFields },
+        details: {
+          forbiddenFields: ['otherField'],
+        },
       },
     })
   })

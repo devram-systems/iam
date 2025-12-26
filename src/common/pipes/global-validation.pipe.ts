@@ -8,17 +8,22 @@ export function createGlobalValidationPipe(): ValidationPipe {
     forbidNonWhitelisted: true,
     transform: true,
     exceptionFactory: (errors: ValidationError[]): BadRequestException => {
-      const requiredFields = errors
-        .filter((e) => Boolean(e.constraints?.isNotEmpty))
-        .map((e) => e.property)
+      const details: Record<string, string[]> = {}
 
-      const invalidFields = errors
-        .filter((e) => Boolean(e.constraints && !('isNotEmpty' in e.constraints)))
-        .map((e) => e.property)
+      errors.forEach((e) => {
+        if (!e.constraints) return
 
-      const details: Record<string, unknown> = {}
-      if (requiredFields.length) details.requiredFields = requiredFields
-      if (invalidFields.length) details.invalidFields = invalidFields
+        if ('isNotEmpty' in e.constraints) {
+          details.requiredFields = details.requiredFields ?? []
+          details.requiredFields.push(e.property)
+        } else if ('whitelistValidation' in e.constraints) {
+          details.forbiddenFields = details.forbiddenFields ?? []
+          details.forbiddenFields.push(e.property)
+        } else {
+          details.invalidFields = details.invalidFields ?? []
+          details.invalidFields.push(e.property)
+        }
+      })
 
       return new BadRequestException({
         message: 'Invalid request body',
