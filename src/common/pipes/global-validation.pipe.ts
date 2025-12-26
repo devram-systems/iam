@@ -9,16 +9,22 @@ export function createGlobalValidationPipe(): ValidationPipe {
     transform: true,
     exceptionFactory: (errors: ValidationError[]): BadRequestException => {
       const requiredFields = errors
-        .filter((error) => Boolean(error.constraints?.isNotEmpty))
-        .map((error) => error.property)
+        .filter((e) => Boolean(e.constraints?.isNotEmpty))
+        .map((e) => e.property)
+
+      const invalidFields = errors
+        .filter((e) => Boolean(e.constraints && !('isNotEmpty' in e.constraints)))
+        .map((e) => e.property)
+
+      const details: Record<string, unknown> = {}
+      if (requiredFields.length) details.requiredFields = requiredFields
+      if (invalidFields.length) details.invalidFields = invalidFields
 
       return new BadRequestException({
         message: 'Invalid request body',
         error: {
           code: ErrorCode.INVALID_REQUEST,
-          details: {
-            requiredFields,
-          },
+          details,
         },
       })
     },

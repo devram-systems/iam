@@ -39,7 +39,7 @@ describe('POST /auth/validate', () => {
     })
   })
 
-  it('should respond with required fields when the request body is empty', async () => {
+  it('should respond with a invalid requests when the request body is empty', async () => {
     const response = await request(server).post(URL).expect(400)
 
     expect(response.body).toMatchObject({
@@ -83,6 +83,34 @@ describe('POST /auth/validate', () => {
       })
     },
   )
+
+  it.each([
+    {
+      body: { identity: 'user.example', password: 123 },
+      invalidFields: ['password'],
+      description: 'password is of wrong type',
+    },
+    {
+      body: { identity: 123, password: 'pass-example' },
+      invalidFields: ['identity'],
+      description: 'identity is of wrong type',
+    },
+    {
+      body: { identity: 123, password: 123 },
+      invalidFields: ['identity', 'password'],
+      description: 'required fields are of wrong type',
+    },
+  ])('should response a invalid request when $description', async ({ body, invalidFields }) => {
+    const response = await request(server).post(URL).send(body).expect(400)
+
+    expect(response.body).toMatchObject({
+      message: 'Invalid request body',
+      error: {
+        code: ErrorCode.INVALID_REQUEST,
+        details: { invalidFields },
+      },
+    })
+  })
 
   afterAll(async () => {
     await app.close()
