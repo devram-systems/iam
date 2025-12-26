@@ -136,6 +136,28 @@ describe('POST /auth/validate', () => {
     })
   })
 
+  it('should respond with invalid requests errors when multiple problems occur', async () => {
+    const response = await request(server)
+      .post(URL)
+      .send({
+        password: 123,
+        otherField: '',
+      })
+      .expect(400)
+
+    expect(response.body).toMatchObject({
+      message: 'Invalid request body',
+      error: {
+        code: ErrorCode.INVALID_REQUEST,
+        details: {
+          requiredFields: ['identity'],
+          invalidFields: ['password'],
+          forbiddenFields: ['otherField'],
+        },
+      },
+    })
+  })
+
   afterAll(async () => {
     await app.close()
   })
