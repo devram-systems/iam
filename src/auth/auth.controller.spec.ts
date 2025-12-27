@@ -24,4 +24,12 @@ describe('AuthController', () => {
       message: 'Identity verified successfully',
     })
   })
+
+  it('should return a success message when the validation is called correctly', () => {
+    const result = controller.register()
+
+    expect(result).toEqual({
+      message: 'Authentication data created successfully',
+    })
+  })
 })
