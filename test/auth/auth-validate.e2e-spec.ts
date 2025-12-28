@@ -1,11 +1,8 @@
 import type { INestApplication } from '@nestjs/common'
 import type { Server } from 'http'
-import { Test } from '@nestjs/testing'
 import request from 'supertest'
-
-import { AppModule } from '../src/app.module'
-import { ErrorCode } from '../src/common/errors/error-code.enum'
-import { createGlobalValidationPipe } from '../src/common/pipes/global-validation.pipe'
+import { ErrorCode } from '../../src/common/errors/error-code.enum'
+import { createApp } from '../utils/app'
 
 describe('POST /auth/validate', () => {
   let app: INestApplication
@@ -14,15 +11,9 @@ describe('POST /auth/validate', () => {
   const URL = '/auth/validate'
 
   beforeAll(async () => {
-    const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile()
-
-    app = moduleRef.createNestApplication()
-    app.useGlobalPipes(createGlobalValidationPipe())
-
-    await app.init()
-    server = app.getHttpServer() as Server
+    const ctx = await createApp()
+    app = ctx.app
+    server = ctx.server
   })
 
   it('should receive a success message when a valid request is sent', async () => {
