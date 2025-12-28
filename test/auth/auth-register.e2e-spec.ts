@@ -107,6 +107,27 @@ describe('POST /auth/register', () => {
     },
   )
 
+  it('should respond with forbidden fields error when extra fields are sent', async () => {
+    const response = await request(server)
+      .post(URL)
+      .send({
+        email: 'email@example.com',
+        password: 'pass-example',
+        otherField: 'value',
+      })
+      .expect(400)
+
+    expect(response.body).toMatchObject({
+      message: 'Invalid request body',
+      error: {
+        code: ErrorCode.INVALID_REQUEST,
+        details: {
+          forbiddenFields: ['otherField'],
+        },
+      },
+    })
+  })
+
   afterAll(async () => {
     await app.close()
   })
