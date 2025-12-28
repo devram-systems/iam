@@ -1,5 +1,6 @@
 import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common'
 import { ValidateDto } from './dto/validate.dto'
+import { RegisterDto } from './dto/register.dto'
 
 @Controller('auth')
 export class AuthController {
@@ -12,7 +13,8 @@ export class AuthController {
 
   @Post('register')
   @HttpCode(HttpStatus.CREATED)
-  register(): { message: string } {
+  register(@Body() body: RegisterDto): { message: string } {
+    void body
     return { message: 'Authentication data created successfully' }
   }
 }

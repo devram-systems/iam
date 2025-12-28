@@ -17,7 +17,6 @@ describe('AuthController', () => {
       identity: 'user.example',
       password: 'pass-example',
     }
-
     const result = controller.validate(dto)
 
     expect(result).toEqual({
@@ -26,7 +25,11 @@ describe('AuthController', () => {
   })
 
   it('should return a success message when the validation is called correctly', () => {
-    const result = controller.register()
+    const dto = {
+      email: 'user.example',
+      password: 'pass-example',
+    }
+    const result = controller.register(dto)
 
     expect(result).toEqual({
       message: 'Authentication data created successfully',
