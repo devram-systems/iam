@@ -76,6 +76,37 @@ describe('POST /auth/register', () => {
     },
   )
 
+  it.each([
+    {
+      body: { email: 'email@example.com', password: 123 },
+      invalidFields: ['password'],
+      description: 'password is of wrong type',
+    },
+    {
+      body: { email: 123, password: 'pass-example' },
+      invalidFields: ['email'],
+      description: 'email is of wrong type',
+    },
+    {
+      body: { email: 123, password: 123 },
+      invalidFields: ['email', 'password'],
+      description: 'required fields are of wrong type',
+    },
+  ])(
+    'should response an invalid fields error when $description',
+    async ({ body, invalidFields }) => {
+      const response = await request(server).post(URL).send(body).expect(400)
+
+      expect(response.body).toMatchObject({
+        message: 'Invalid request body',
+        error: {
+          code: ErrorCode.INVALID_REQUEST,
+          details: { invalidFields },
+        },
+      })
+    },
+  )
+
   afterAll(async () => {
     await app.close()
   })
