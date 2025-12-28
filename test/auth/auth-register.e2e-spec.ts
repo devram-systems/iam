@@ -45,6 +45,37 @@ describe('POST /auth/register', () => {
     })
   })
 
+  it.each([
+    {
+      body: { email: 'email@example.com' },
+      requiredFields: ['password'],
+      description: 'password is empty',
+    },
+    {
+      body: { password: 'pass-example' },
+      requiredFields: ['email'],
+      description: 'email is empty',
+    },
+    {
+      body: { other: 'value' },
+      requiredFields: ['email', 'password'],
+      description: 'other field is sent',
+    },
+  ])(
+    'should respond with an required fields when $description',
+    async ({ body, requiredFields }) => {
+      const response = await request(server).post(URL).send(body).expect(400)
+
+      expect(response.body).toMatchObject({
+        message: 'Invalid request body',
+        error: {
+          code: ErrorCode.INVALID_REQUEST,
+          details: { requiredFields },
+        },
+      })
+    },
+  )
+
   afterAll(async () => {
     await app.close()
   })
