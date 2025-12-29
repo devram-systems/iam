@@ -78,17 +78,20 @@ describe('POST /auth/validate', () => {
   it.each([
     {
       body: { identity: 'user.example', password: 123 },
-      invalidFields: ['password'],
+      invalidFields: { password: ['isString'] },
       description: 'password is of wrong type',
     },
     {
       body: { identity: 123, password: 'pass-example' },
-      invalidFields: ['identity'],
+      invalidFields: { identity: ['isString'] },
       description: 'identity is of wrong type',
     },
     {
       body: { identity: 123, password: 123 },
-      invalidFields: ['identity', 'password'],
+      invalidFields: {
+        identity: ['isString'],
+        password: ['isString'],
+      },
       description: 'required fields are of wrong type',
     },
   ])(
@@ -142,7 +145,7 @@ describe('POST /auth/validate', () => {
         code: ErrorCode.INVALID_REQUEST,
         details: {
           requiredFields: ['identity'],
-          invalidFields: ['password'],
+          invalidFields: { password: ['isString'] },
           forbiddenFields: ['otherField'],
         },
       },

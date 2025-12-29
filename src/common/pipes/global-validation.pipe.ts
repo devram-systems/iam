@@ -8,7 +8,11 @@ export function createGlobalValidationPipe(): ValidationPipe {
     forbidNonWhitelisted: true,
     transform: true,
     exceptionFactory: (errors: ValidationError[]): BadRequestException => {
-      const details: Record<string, string[]> = {}
+      const details: {
+        requiredFields?: string[]
+        forbiddenFields?: string[]
+        invalidFields?: Record<string, string[]>
+      } = {}
 
       errors.forEach((e) => {
         if (!e.constraints) return
@@ -20,8 +24,13 @@ export function createGlobalValidationPipe(): ValidationPipe {
           details.forbiddenFields = details.forbiddenFields ?? []
           details.forbiddenFields.push(e.property)
         } else {
-          details.invalidFields = details.invalidFields ?? []
-          details.invalidFields.push(e.property)
+          details.invalidFields ??= {}
+
+          const fieldErrors = (details.invalidFields[e.property] ??= [])
+
+          Object.keys(e.constraints).forEach((constraint) => {
+            fieldErrors.push(constraint)
+          })
         }
       })
 

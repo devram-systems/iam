@@ -79,17 +79,20 @@ describe('POST /auth/register', () => {
   it.each([
     {
       body: { email: 'email@example.com', password: 123 },
-      invalidFields: ['password'],
+      invalidFields: { password: ['isString'] },
       description: 'password is of wrong type',
     },
     {
       body: { email: 123, password: 'pass-example' },
-      invalidFields: ['email'],
+      invalidFields: { email: ['isString'] },
       description: 'email is of wrong type',
     },
     {
       body: { email: 123, password: 123 },
-      invalidFields: ['email', 'password'],
+      invalidFields: {
+        email: ['isString'],
+        password: ['isString'],
+      },
       description: 'required fields are of wrong type',
     },
   ])(
@@ -143,7 +146,7 @@ describe('POST /auth/register', () => {
         code: ErrorCode.INVALID_REQUEST,
         details: {
           requiredFields: ['email'],
-          invalidFields: ['password'],
+          invalidFields: { password: ['isString'] },
           forbiddenFields: ['otherField'],
         },
       },
