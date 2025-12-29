@@ -21,7 +21,7 @@ describe('POST /auth/register', () => {
     const response = await request(server)
       .post(URL)
       .send({
-        email: 'user.example',
+        email: 'email@example.com',
         password: 'pass-example',
       })
       .expect(HttpStatus.CREATED)
@@ -84,13 +84,13 @@ describe('POST /auth/register', () => {
     },
     {
       body: { email: 123, password: 'pass-example' },
-      invalidFields: { email: ['isString'] },
+      invalidFields: { email: ['isEmail'] },
       description: 'email is of wrong type',
     },
     {
       body: { email: 123, password: 123 },
       invalidFields: {
-        email: ['isString'],
+        email: ['isEmail'],
         password: ['isString'],
       },
       description: 'required fields are of wrong type',
@@ -148,6 +148,28 @@ describe('POST /auth/register', () => {
           requiredFields: ['email'],
           invalidFields: { password: ['isString'] },
           forbiddenFields: ['otherField'],
+        },
+      },
+    })
+  })
+
+  it('should respond with invalid email format error when email is not valid', async () => {
+    const response = await request(server)
+      .post(URL)
+      .send({
+        email: 'email.example',
+        password: 'pass-example',
+      })
+      .expect(HttpStatus.BAD_REQUEST)
+
+    expect(response.body).toMatchObject({
+      message: 'Invalid request body',
+      error: {
+        code: ErrorCode.INVALID_REQUEST,
+        details: {
+          invalidFields: {
+            email: ['isEmail'],
+          },
         },
       },
     })
