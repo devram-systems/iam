@@ -32,7 +32,7 @@ describe('POST /auth/register', () => {
   })
 
   it('should respond with a required fields error when the request body is empty', async () => {
-    const response = await request(server).post(URL).expect(400)
+    const response = await request(server).post(URL).expect(HttpStatus.BAD_REQUEST)
 
     expect(response.body).toMatchObject({
       message: 'Invalid request body',
@@ -64,7 +64,7 @@ describe('POST /auth/register', () => {
   ])(
     'should respond with an required fields when $description',
     async ({ body, requiredFields }) => {
-      const response = await request(server).post(URL).send(body).expect(400)
+      const response = await request(server).post(URL).send(body).expect(HttpStatus.BAD_REQUEST)
 
       expect(response.body).toMatchObject({
         message: 'Invalid request body',
@@ -98,7 +98,7 @@ describe('POST /auth/register', () => {
   ])(
     'should response an invalid fields error when $description',
     async ({ body, invalidFields }) => {
-      const response = await request(server).post(URL).send(body).expect(400)
+      const response = await request(server).post(URL).send(body).expect(HttpStatus.BAD_REQUEST)
 
       expect(response.body).toMatchObject({
         message: 'Invalid request body',
@@ -118,7 +118,7 @@ describe('POST /auth/register', () => {
         password: 'pass-example',
         otherField: 'value',
       })
-      .expect(400)
+      .expect(HttpStatus.BAD_REQUEST)
 
     expect(response.body).toMatchObject({
       message: 'Invalid request body',
@@ -138,7 +138,7 @@ describe('POST /auth/register', () => {
         password: 123,
         otherField: '',
       })
-      .expect(400)
+      .expect(HttpStatus.BAD_REQUEST)
 
     expect(response.body).toMatchObject({
       message: 'Invalid request body',

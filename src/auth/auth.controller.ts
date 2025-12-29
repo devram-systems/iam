@@ -5,7 +5,7 @@ import { RegisterDto } from './dto/register.dto'
 @Controller('auth')
 export class AuthController {
   @Post('validate')
-  @HttpCode(200)
+  @HttpCode(HttpStatus.OK)
   validate(@Body() body: ValidateDto): { message: string } {
     void body
     return { message: 'Identity verified successfully' }

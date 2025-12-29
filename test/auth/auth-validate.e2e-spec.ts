@@ -1,4 +1,5 @@
 import type { INestApplication } from '@nestjs/common'
+import { HttpStatus } from '@nestjs/common'
 import type { Server } from 'http'
 import request from 'supertest'
 import { ErrorCode } from '../../src/common/errors/error-code.enum'
@@ -23,7 +24,7 @@ describe('POST /auth/validate', () => {
         identity: 'user.example',
         password: 'pass-example',
       })
-      .expect(200)
+      .expect(HttpStatus.OK)
 
     expect(response.body).toEqual({
       message: 'Identity verified successfully',
@@ -31,7 +32,7 @@ describe('POST /auth/validate', () => {
   })
 
   it('should respond with a required fields error when the request body is empty', async () => {
-    const response = await request(server).post(URL).expect(400)
+    const response = await request(server).post(URL).expect(HttpStatus.BAD_REQUEST)
 
     expect(response.body).toMatchObject({
       message: 'Invalid request body',
@@ -63,7 +64,7 @@ describe('POST /auth/validate', () => {
   ])(
     'should respond with an required fields when $description',
     async ({ body, requiredFields }) => {
-      const response = await request(server).post(URL).send(body).expect(400)
+      const response = await request(server).post(URL).send(body).expect(HttpStatus.BAD_REQUEST)
 
       expect(response.body).toMatchObject({
         message: 'Invalid request body',
@@ -97,7 +98,7 @@ describe('POST /auth/validate', () => {
   ])(
     'should response an invalid fields error when $description',
     async ({ body, invalidFields }) => {
-      const response = await request(server).post(URL).send(body).expect(400)
+      const response = await request(server).post(URL).send(body).expect(HttpStatus.BAD_REQUEST)
 
       expect(response.body).toMatchObject({
         message: 'Invalid request body',
@@ -117,7 +118,7 @@ describe('POST /auth/validate', () => {
         password: 'pass-example',
         otherField: 'value',
       })
-      .expect(400)
+      .expect(HttpStatus.BAD_REQUEST)
 
     expect(response.body).toMatchObject({
       message: 'Invalid request body',
@@ -137,7 +138,7 @@ describe('POST /auth/validate', () => {
         password: 123,
         otherField: '',
       })
-      .expect(400)
+      .expect(HttpStatus.BAD_REQUEST)
 
     expect(response.body).toMatchObject({
       message: 'Invalid request body',
