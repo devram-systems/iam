@@ -175,6 +175,28 @@ describe('POST /auth/register', () => {
     })
   })
 
+  it('should respond with invalid email format error when email is not valid', async () => {
+    const response = await request(server)
+      .post(URL)
+      .send({
+        email: 'email.example',
+        password: 'pass-example',
+      })
+      .expect(HttpStatus.BAD_REQUEST)
+
+    expect(response.body).toMatchObject({
+      message: 'Invalid request body',
+      error: {
+        code: ErrorCode.INVALID_REQUEST,
+        details: {
+          invalidFields: {
+            email: ['isEmail'],
+          },
+        },
+      },
+    })
+  })
+
   afterAll(async () => {
     await app.close()
   })
