@@ -1,6 +1,10 @@
 import { BadRequestException, ValidationPipe, type ValidationPipeOptions } from '@nestjs/common'
 import type { ValidationError } from 'class-validator'
 import { ErrorCode } from '../errors/error-code.enum'
+import {
+  type InvalidRequestErrorDetails,
+  type InvalidRequestErrorResponse,
+} from '../errors/http-error-response'
 
 export function createGlobalValidationPipe(): ValidationPipe {
   const options: ValidationPipeOptions = {
@@ -8,11 +12,7 @@ export function createGlobalValidationPipe(): ValidationPipe {
     forbidNonWhitelisted: true,
     transform: true,
     exceptionFactory: (errors: ValidationError[]): BadRequestException => {
-      const details: {
-        requiredFields?: string[]
-        forbiddenFields?: string[]
-        invalidFields?: Record<string, string[]>
-      } = {}
+      const details: InvalidRequestErrorDetails = {}
 
       errors.forEach((e) => {
         if (!e.constraints) return
@@ -34,13 +34,15 @@ export function createGlobalValidationPipe(): ValidationPipe {
         }
       })
 
-      return new BadRequestException({
+      const responseError: InvalidRequestErrorResponse = {
         message: 'Invalid request body',
         error: {
           code: ErrorCode.INVALID_REQUEST,
           details,
         },
-      })
+      }
+
+      return new BadRequestException(responseError)
     },
   }
 
